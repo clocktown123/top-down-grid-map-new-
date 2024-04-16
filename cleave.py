@@ -20,7 +20,7 @@ class Cleave:
 
     def shoot(self, x, y, dir):
         self.xpos = x + 20 # start fireball at center of player
-        self.ypos = y +20
+        self.ypos = y - 20 
         self.isAlive = True
         self.direction = dir
 
