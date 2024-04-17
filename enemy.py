@@ -16,16 +16,16 @@ class Enemy:
         pygame.draw.rect(screen, (20, 20, 40), ( self.xpos, self.ypos, 20, 20))
 
     def move(self, map, ticker, px, py):
-        if ticker % .4 == 0: #change this number to make him change direction less or more often
+        if ticker % 40 == 0: #change this number to make him change direction less or more often
             num = random.randrange(0, 4)
-            if num == D:
-                self.xpos += 3
-            elif num == A:
-                self.xpos -= 3
-            elif num == W:
-                self.ypos -= 6
-            elif num == S:
-                self.ypos += 6
+            if num == 0:
+                self.direction = D
+            elif num == 1:
+                self.direction = A
+            elif num == 2:
+                self.direction = W
+            elif num == 3:
+                self.direction = S
         #check if the player is in the line of sight
         if abs(int(py/50) - int(self.ypos/50))<2: #check that player and enemy are in the same row
             if px < self.xpos: #check that player is to the left of the enemy
@@ -34,7 +34,7 @@ class Enemy:
             else:
                 self.xpos+=5
                 self.direction = D
-            
+        if abs(int(px/50) - int(self.xpos/50))<2:
             if py < self.ypos: #check that player is to the left of the enemy
                 self.ypos -=5
                 self.direction = W
@@ -49,4 +49,11 @@ class Enemy:
             self.direction = S
             self.xpos += 6
 
-        
+        if self.direction == D:
+            self.xpos += 3
+        elif self.direction == A:
+            self.xpos -= 3
+        elif self.direction == W:
+            self.ypos -=3
+        elif self.direction == S:
+            self.ypos +=3
