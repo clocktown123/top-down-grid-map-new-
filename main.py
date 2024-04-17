@@ -76,11 +76,12 @@ def draw_text(text, font, text_col, tx, ty):
 
 while 1: #GAME LOOP######################################################
     clock.tick(60) # fps
+    ticker+=1
     #input section--------------------------------------------------
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             gameover = True
-            ticker+=1
+            
             
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_SPACE:
@@ -148,8 +149,12 @@ while 1: #GAME LOOP######################################################
     ball.move(p1.direction)
     cleave.move(p2.direction2)
 
-    e1.move(map, ticker, p1.xpos, p1.ypos)
 
+    if state == 2:
+        e1.move(map, ticker, p1.xpos, p1.ypos)
+    if state == 3:
+        e1.move(map, ticker, p2.xpos2, p2.ypos2)
+           
     if keys2[SPACE] == True:
         ball.shoot(p1.xpos, p1.ypos, p1.direction)
 
@@ -207,7 +212,7 @@ while 1: #GAME LOOP######################################################
     if state == 2 or state == 3 or state == 4:
         screen.fill((128,128,128))
 
-        
+        e1.draw(screen)
 
         #draw map
         for i in range(20):
@@ -251,7 +256,6 @@ while 1: #GAME LOOP######################################################
         elif counter == 9:
             pygame.draw.rect(screen, (58, 156, 156), (795, 55, 150, 90))
 
-        e1.draw(screen)
 
         if state == 2:
             p1.draw(screen)
