@@ -48,6 +48,12 @@ class Enemy:
         if self.direction == A and map[int((self.ypos) / 50)][int((self.xpos - 20) / 50)] == 2:
             self.direction = S
             self.xpos += 6
+        if self.direction == S and map[int((self.ypos + 20) / 50)][int((self.xpos) / 50)] == 2:
+            self.direction = A
+            self.ypos -= 6
+        if self.direction == W and map[int((self.ypos - 20) / 50)][int((self.xpos) / 50)] == 2:
+            self.direction = D
+            self.ypos += 6
 
         if self.direction == D:
             self.xpos += 3
