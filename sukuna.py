@@ -81,7 +81,18 @@ class Sukuna:
         
 
         #COLLISION
-        
+        #LEFT
+        if map [int((self.ypos2-10) / 50)][int((self.xpos2 - 10) / 50)] == 2:
+            self.xpos2+=3
+        #RIGHT
+        if map [int((self.ypos2) / 50)][int((self.xpos2 +30 + 5) / 50)] == 2:
+            self.xpos2-=3
+        #DOWN
+        if map [int((self.ypos2 + 30 + 5) / 50)][int((self.xpos2 ) / 50)] == 2:
+            self.ypos2-=3
+        #UP
+        if map [int((self.ypos2 - 20) / 50)][int((self.xpos2) / 50)] == 2:
+            self.ypos2+=3
 
         self.ypos2+=self.vy2
         self.xpos2+=self.vx2
