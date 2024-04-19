@@ -154,7 +154,6 @@ while 1: #GAME LOOP######################################################
         e1.move(map, ticker, p1.xpos, p1.ypos)
     if state == 3:
         e1.move(map, ticker, p2.xpos2, p2.ypos2)
-           
     if keys2[SPACE] == True:
         ball.shoot(p1.xpos, p1.ypos, p1.direction)
 
