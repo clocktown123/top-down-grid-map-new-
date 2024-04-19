@@ -19,7 +19,7 @@ class player:
     def __init__ (self):
 
         #player variables
-        self.xpos = 400
+        self.xpos = 200
         self.ypos = 615
         self.vx = 0
         self.vy = 0
@@ -84,10 +84,12 @@ class player:
         #RIGHT
         if map [int((self.ypos) / 50)][int((self.xpos +30 + 5) / 50)] == 2:
             self.xpos-=3
-        if map [int((self.ypos-10) / 50)][int((self.xpos - 10) / 50)] == 2:
+        #DOWN
+        if map [int((self.ypos + 30 + 5) / 50)][int((self.xpos ) / 50)] == 2:
             self.ypos-=3
-        #if map [int((self.ypos-10) / 50)][int((self.xpos - 10) / 50)] == 2:
-            #self.ypos-=3
+        #UP
+        if map [int((self.ypos - 20) / 50)][int((self.xpos) / 50)] == 2:
+            self.ypos+=3
 
         self.ypos+=self.vy
         self.xpos+=self.vx
