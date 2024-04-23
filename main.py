@@ -1,9 +1,10 @@
 import pygame
+from map import MapF
 from player import player
 from limitless import fireball
 from sukuna import Sukuna
 from cleave import Cleave
-from enemy import Enemy
+from enemy import Enemy 
 pygame.init()
 pygame.display.set_caption("top down grid map game")
 screen = pygame.display.set_mode((1000,1000))
@@ -43,6 +44,8 @@ mouseDown = False
 
 ticker = 0
 
+mapNum = 1
+
 map = [[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
        [2,0,0,0,0,2,2,0,0,0,0,0,0,0,0,0,0,0,0,2],
        [2,0,0,0,0,2,2,0,0,0,0,0,0,0,0,0,0,0,0,2],
@@ -64,9 +67,27 @@ map = [[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
        [2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2],
        [2,1,1,1,1,1,1,1,3,3,3,3,3,1,1,1,1,1,1,2]]
 
-brick = pygame.image.load('brick.png')
-dirt = pygame.image.load('dirt.png')
-lava = pygame.image.load('lava.png')
+map2 = [[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
+       [2,0,0,0,0,2,2,0,0,0,0,0,0,0,0,0,0,0,0,2],
+       [2,0,0,0,0,2,2,0,0,0,0,0,0,0,0,0,0,0,0,2],
+       [2,0,0,2,2,2,2,0,0,0,0,0,0,0,0,0,0,0,0,2],
+       [2,0,0,0,0,0,0,0,0,0,0,2,2,2,2,2,0,0,0,2],
+       [2,0,0,0,0,0,0,0,0,0,2,2,0,0,0,0,0,0,0,2],
+       [2,0,2,0,0,0,0,0,2,2,2,2,2,2,0,0,0,0,0,2],
+       [2,0,2,0,0,0,0,0,2,2,2,2,2,2,0,0,0,0,0,2],
+       [2,0,2,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,2],
+       [2,0,0,0,0,0,0,0,0,0,0,0,2,0,2,0,0,0,0,2],
+       [2,0,0,0,0,0,0,0,0,0,0,0,2,0,2,0,0,0,0,2],
+       [2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2],
+       [2,0,0,0,0,0,0,0,0,0,0,2,2,2,0,0,0,0,0,2],
+       [2,0,0,0,0,0,2,0,0,0,0,2,2,2,0,0,0,0,0,2],
+       [2,0,0,0,0,2,2,0,0,0,0,2,2,2,0,0,0,0,0,2],
+       [2,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,2],
+       [2,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,2],
+       [2,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,2],
+       [2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2],
+       [2,1,1,1,1,1,1,1,3,3,3,3,3,1,1,1,1,1,1,2]]
+
 
 text_font = pygame.font.SysFont("Sans", 30, bold = True)
 
@@ -143,17 +164,29 @@ while 1: #GAME LOOP######################################################
     if counter > 10:
         counter = 0
 
-    p1.move(keys2 , map)
-    p2.move(keys2, map)
+    if mapNum == 1:
+        p1.move(keys2 , map)
+        p2.move(keys2, map)
+    elif mapNum == 2:
+        p1.move(keys2 , map2)
+        p2.move(keys2, map2)
 
     ball.move(p1.direction)
     cleave.move(p2.direction2)
 
+    e1.die(ball.xpos, ball.ypos)
+
 
     if state == 2:
-        e1.move(map, ticker, p1.xpos, p1.ypos)
+        if mapNum == 1:
+            e1.move(map, ticker, p1.xpos, p1.ypos)
+        elif mapNum == 2:
+            e1.move(map2, ticker, p1.xpos, p1.ypos)
     if state == 3:
-        e1.move(map, ticker, p2.xpos2, p2.ypos2)
+        if mapNum == 1:
+            e1.move(map, ticker, p2.xpos2, p2.ypos2)
+        elif mapNum == 2:
+            e1.move(map2, ticker, p2.xpos2, p2.ypos2)
     if keys2[SPACE] == True:
         ball.shoot(p1.xpos, p1.ypos, p1.direction)
 
@@ -213,27 +246,37 @@ while 1: #GAME LOOP######################################################
 
         e1.draw(screen)
 
+        if e1.isAlive == False:
+            mapNum = 2
+
         #draw map
-        for i in range(20):
-            for j in range(20):
-                if map[i][j] == 1:
-                    screen.blit(dirt, (j*50, i * 50), (0, 0, 50, 50))
-                if map[i][j] == 2:
-                    screen.blit(brick, (j *50, i * 50), (0, 0, 50, 50))
-                if map[i][j] == 3:
-                    screen.blit(lava, (j *50, i * 50), (0, 0, 50, 50))
+        if mapNum == 1:
+            MapF(screen, map)
+        
+        if mapNum == 2:
+            MapF(screen, map2)
+                
+        
+        #GOJO---------------------------------------------------------------
+
         if state == 2:
             if keys2[F] == True:
                 p1.domain(screen)
-
+    
             if ball.isAlive == True and counter < 10:
                 ball.draw(screen)
             else:
                 ball.B_draw(screen)
         
+        #SUKUNA-----------------------------------------------------------
+        
         elif state == 3:
             if cleave.isAlive == True:
                 cleave.draw(screen)
+            
+            if keys2[F] == True:
+                p2.domain(screen)
+                
 
         pygame.draw.rect(screen, (0, 0, 0), (790, 50, 160, 100), 5)  # width = 3
         if counter == 1:
