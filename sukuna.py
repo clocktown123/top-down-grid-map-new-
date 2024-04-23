@@ -12,7 +12,7 @@ F = 5
 Guy = pygame.image.load('GuySS2.png') #load your spritesheet
 Guy.set_colorkey((255, 90, 255)) #this makes bright pink (255, 0, 255) transparent (sort of)
 
-
+expansion = pygame.image.load('malevolent_shrine.png')
 
 
 #expansion = pygame.image.load('domain.png')
@@ -37,8 +37,8 @@ class Sukuna:
         #pygame.draw.rect(screen, (255,0,255), (self.xpos, self.ypos, 30, 30))
         screen.blit(Guy, (self.xpos2-40, self.ypos2 -40), (self.frameWidth2*self.frameNum2, self.RowNum2*self.frameHeight2, self.frameWidth2, self.frameHeight2))
 
-    #def domain(self, screen):
-        #screen.blit(expansion, (0,0), (0,0, 10000, 10000))
+    def domain(self, screen):
+        screen.blit(expansion, (0,0), (0,0, 10000, 10000))
 
     def move(self, keys2, map):
         #LEFT MOVEMENT
