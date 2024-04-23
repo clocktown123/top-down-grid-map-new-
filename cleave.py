@@ -37,7 +37,7 @@ class Cleave:
             self.ypos-=20
         
     def draw(self,screen):
-        screen.blit(slash, (self.xpos, self.ypos) )
+        screen.blit(slash, (self.xpos, self.ypos))#screen.blit(slash, (self.xpos, self.ypos))
     
     def B_draw(self, screen):
         pygame.draw.circle(screen, (138,43,226), (self.xpos, self.ypos), 30)
