@@ -1,17 +1,19 @@
 import pygame
 from map import MapF
+from hp import Health
 from player import player
 from limitless import fireball
 from sukuna import Sukuna
 from cleave import Cleave
 from enemy import Enemy 
+from pygame import mixer
+mixer.init()
 pygame.init()
 pygame.display.set_caption("top down grid map game")
 screen = pygame.display.set_mode((1000,1000))
 clock = pygame.time.Clock()
-#gameover = False
 
-
+music = pygame.mixer.Sound("BGGB_music.mp3")
 
 
 A = 0
@@ -27,8 +29,11 @@ p2 = Sukuna()
 ball = fireball()
 cleave = Cleave()
 e1 = Enemy()
+e2 = Enemy()
 
 counter = 0
+
+HP = 100
 
 #game state variable
 state = 1 #1 is menu, 2 is playing, 3 is credits
@@ -95,7 +100,8 @@ def draw_text(text, font, text_col, tx, ty):
     img = font.render(text, True, text_col)
     screen.blit(img, (tx, ty))
 
-while 1: #GAME LOOP######################################################
+while 1 and p1.HP > 0 and p2.HP > 0: #GAME LOOP######################################################
+    pygame.mixer.Sound.play(music)
     clock.tick(60) # fps
     ticker+=1
     #input section--------------------------------------------------
@@ -174,24 +180,34 @@ while 1: #GAME LOOP######################################################
     ball.move(p1.direction)
     cleave.move(p2.direction2)
 
-    e1.die(ball.xpos, ball.ypos)
-
+    e1.die(ball.pos.x, ball.pos.y, cleave.pos.x, cleave.pos.y)
+    e2.die(ball.pos.x, ball.pos.y, cleave.pos.x, cleave.pos.y)
+    p1.PlayerHp(e1.pos.x, e1.pos.y)
+    p2.PlayerHp(e1.pos.x, e1.pos.y)
+    p1.PlayerHp(e2.pos.x, e2.pos.y)
+    p2.PlayerHp(e2.pos.x, e2.pos.y)
 
     if state == 2:
         if mapNum == 1:
-            e1.move(map, ticker, p1.xpos, p1.ypos)
-        elif mapNum == 2:
-            e1.move(map2, ticker, p1.xpos, p1.ypos)
+            e1.move(map, ticker, p1.pos.x, p1.pos.y)
+        if mapNum == 2:
+            e2.move(map2, ticker, p1.pos.x, p1.pos.y)
     if state == 3:
         if mapNum == 1:
-            e1.move(map, ticker, p2.xpos2, p2.ypos2)
+            e1.move(map, ticker, p2.pos2.x, p2.pos2.y)
         elif mapNum == 2:
-            e1.move(map2, ticker, p2.xpos2, p2.ypos2)
+            e2.move(map2, ticker, p2.pos2.x, p2.pos2.y)
+            
     if keys2[SPACE] == True:
-        ball.shoot(p1.xpos, p1.ypos, p1.direction)
+        ball.shoot(p1.pos.x, p1.pos.y, p1.direction)
+        
+ 
 
     if keys2[SPACE] == True:
-        cleave.shoot(p2.xpos2, p2.ypos2, p2.direction2)
+        cleave.shoot(p2.pos2.x, p2.pos2.y, p2.direction2)
+        
+        
+       
 
      #ANIMATION-------------------------------------------------------------------
     
@@ -199,7 +215,7 @@ while 1: #GAME LOOP######################################################
         button1 = True
     else:
         button1 = False
-    
+     
     if state == 1 and mousePos[0]>400 and mousePos[0]<600 and mousePos[1]>400 and mousePos[1]<550:
         button2 = True
     else:
@@ -244,7 +260,10 @@ while 1: #GAME LOOP######################################################
     if state == 2 or state == 3 or state == 4:
         screen.fill((128,128,128))
 
-        e1.draw(screen)
+        if mapNum == 1:
+            e1.draw(screen)
+        elif mapNum == 2:
+            e2.draw(screen)
 
         if e1.isAlive == False:
             mapNum = 2
@@ -271,14 +290,17 @@ while 1: #GAME LOOP######################################################
         #SUKUNA-----------------------------------------------------------
         
         elif state == 3:
-            if cleave.isAlive == True:
-                cleave.draw(screen)
-            
             if keys2[F] == True:
                 p2.domain(screen)
-                
 
-        pygame.draw.rect(screen, (0, 0, 0), (790, 50, 160, 100), 5)  # width = 3
+            if cleave.isAlive == True and counter < 10:
+                cleave.draw(screen)
+            
+            
+                
+        #Special Bar ----------------------------------------------------------------------
+
+        pygame.draw.rect(screen, (0, 0, 0), (790, 50, 160, 100), 5)  # width = 5
         if counter == 1:
             pygame.draw.rect(screen, (58, 156, 156), (795, 55, 16, 90))
         elif counter == 2:
@@ -297,12 +319,19 @@ while 1: #GAME LOOP######################################################
             pygame.draw.rect(screen, (58, 156, 156), (795, 55, 128, 90))
         elif counter == 9:
             pygame.draw.rect(screen, (58, 156, 156), (795, 55, 150, 90))
-
+        
+        #hp and player----------------------------------------------------------------------------     
+    
+        pygame.draw.rect(screen, (0, 0, 0), (50, 50, 110, 30), 5)
+        
+        
 
         if state == 2:
             p1.draw(screen)
+            Health(screen, p1.HP)
         if state == 3:
             p2.draw(screen)
+            Health(screen, p2.HP)
         #elif state == 3:
             
     
