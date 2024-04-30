@@ -1,5 +1,5 @@
 import pygame
-
+from pygame.math import Vector2
 A = 0
 D = 1
 W = 2
@@ -19,8 +19,7 @@ class player:
     def __init__ (self):
 
         #player variables
-        self.xpos = 200
-        self.ypos = 615
+        self.pos = Vector2(200,615)
         self.vx = 0
         self.vy = 0
         self.frameWidth = 95
@@ -29,13 +28,29 @@ class player:
         self.frameNum = 1
         self.ticker = 0
         self.direction = D
+        self.HP = 1000
+        self.last = pygame.time.get_ticks()
+        self.cooldown = 1500
 
     def draw(self, screen):
-        #pygame.draw.rect(screen, (255,0,255), (self.xpos, self.ypos, 30, 30))
-        screen.blit(Guy, (self.xpos-40, self.ypos -40), (self.frameWidth*self.frameNum, self.RowNum*self.frameHeight, self.frameWidth, self.frameHeight))
+        #pygame.draw.rect(screen, (255,0,255), (self.pos.x, self.pos.y, 30, 30))
+        screen.blit(Guy, (self.pos.x-40, self.pos.y -40), (self.frameWidth*self.frameNum, self.RowNum*self.frameHeight, self.frameWidth, self.frameHeight))
 
     def domain(self, screen):
         screen.blit(expansion, (0,0), (0,0, 10000, 10000))
+    
+    def PlayerHp(self, eXpos, eYpos):
+        now = pygame.time.get_ticks()
+        if eXpos + 20 > self.pos.x and eXpos < self.pos.x + 50 and eYpos + 20 > self.pos.y and eYpos < self.pos.y + 50:
+            if now - self.last >= self.cooldown:
+                self.last = now
+                self.HP -= 100
+
+            while self.HP < 500:
+                self.HP += 500
+                print("RCT")
+
+    
 
     def move(self, keys, map):
         #LEFT MOVEMENT
@@ -79,17 +94,17 @@ class player:
 
         #COLLISION
         #LEFT
-        if map [int((self.ypos-10) / 50)][int((self.xpos - 10) / 50)] == 2:
-            self.xpos+=3
+        if map [int((self.pos.y-10) / 50)][int((self.pos.x - 10) / 50)] == 2:
+            self.pos.x+=3
         #RIGHT
-        if map [int((self.ypos) / 50)][int((self.xpos +30 + 5) / 50)] == 2:
-            self.xpos-=3
+        if map [int((self.pos.y) / 50)][int((self.pos.x +30 + 5) / 50)] == 2:
+            self.pos.x-=3
         #DOWN
-        if map [int((self.ypos + 30 + 5) / 50)][int((self.xpos ) / 50)] == 2:
-            self.ypos-=3
+        if map [int((self.pos.y + 30 + 5) / 50)][int((self.pos.x ) / 50)] == 2:
+            self.pos.y-=3
         #UP
-        if map [int((self.ypos - 20) / 50)][int((self.xpos) / 50)] == 2:
-            self.ypos+=3
+        if map [int((self.pos.y - 20) / 50)][int((self.pos.x) / 50)] == 2:
+            self.pos.y+=3
 
-        self.ypos+=self.vy
-        self.xpos+=self.vx
+        self.pos.y+=self.vy
+        self.pos.x+=self.vx
